@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: edu.princeton.cs.introcs:algs4-package:unknown">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/edu/princeton/cs/introcs/algs4-package/1.0/algs4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/edu/princeton/cs/introcs/algs4-package/unknown/algs4-package-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/edu/princeton/cs/introcs/algs4-package/1.0/algs4.jar!/" />
+    </SOURCES>
+  </library>
+</component>
