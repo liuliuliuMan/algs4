@@ -13,7 +13,7 @@ public class SortCompare {
        }else if (alg.equals("selection")){
            MySelection.sort(a);
        }else if (alg.equals("shell")){
-
+           MyShell.sort(a);
        }
 
        return timer.elapsedTime();
@@ -33,8 +33,8 @@ public class SortCompare {
    }
 
     public static void main(String[] args) {
-        double t1 = timeRandonInput("selection",1000,100);
-        double t2 = timeRandonInput("insertionX",1000,100);
+        double t1 = timeRandonInput("insertion",100000,2);
+        double t2 = timeRandonInput("shell",100000,2);
         System.out.println(t1/t2);
     }
 }

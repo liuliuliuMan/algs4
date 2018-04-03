@@ -19,8 +19,9 @@ public class MyExample {
     }
 
     protected static void show(Comparable[] a) {
+        System.out.println();
         for (Comparable c:a) {
-            System.out.println(c);
+            System.out.print(c+" ");
         }
     }
 
