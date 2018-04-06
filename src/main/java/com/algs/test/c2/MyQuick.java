@@ -8,6 +8,7 @@ public class MyQuick extends MyExample {
         int i = lo;
         int j = hi + 1;
         Comparable v = a[lo];
+
         while(true){
             while(less(a[++i],v)){
                 if (i == hi){
