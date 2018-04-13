@@ -228,4 +228,13 @@ public class MyBST <Key extends Comparable<Key>, Value>{
         return x;
     }
 
+    private void print(Node x){
+        if (x == null){
+            return;
+        }
+        print(x.left);
+        System.out.println(x.key);
+        print(x.right);
+    }
+
 }
