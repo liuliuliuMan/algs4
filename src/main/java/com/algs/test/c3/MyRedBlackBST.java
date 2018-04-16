@@ -83,9 +83,9 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     private void flipColors(Node h){
-        h.color = RED;
-        h.left.color = BLACK;
-        h.right.color = BLACK;
+        h.color = !h.color;
+        h.left.color = !h.left.color;
+        h.right.color = !h.right.color;
     }
 
     private Node rotateLeft(Node h){
@@ -111,4 +111,95 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
 
         return x;
     }
+
+    // Assuming that h is red and both h.left and h.left.left
+    // are black, make h.left or one of its children red.
+    private Node moveRedLeft(Node h){
+        //把上面的节点"拉下来"，形成一个大节点
+        flipColors(h);
+        //h.right为3节点时，借给左边一个
+        if (isRed(h.right.left)){
+            h.right = rotateRight(h.right);
+            h = rotateLeft(h);
+            //这一行代表借了一个节点之后，再还一个给父节点，防止变成一个大节点
+            flipColors(h);
+        }
+        return h;
+    }
+
+    // Assuming that h is red and both h.right and h.right.left
+    // are black, make h.right or one of its children red.
+    private Node moveRedRight(Node h){
+        flipColors(h);
+        if (isRed(h.left.left)) {
+            h = rotateRight(h);
+            flipColors(h);
+        }
+        return h;
+    }
+
+    public void deleteMin(){
+        //防止root变成4-节点
+        if (!isRed(root.left)&&isRed(root.right)){
+            root.color = RED;
+        }
+        root = deleteMin(root);
+
+        if (!isEmpty()){
+            root.color = BLACK;
+        }
+    }
+
+    private Node deleteMin(Node h){
+        //删除
+        if (h.left == null){
+            return null;
+        }
+        //h.left为2节点
+        if (!isRed(h.left)&&!isRed(h.left.left)){
+            moveRedLeft(h);
+        }
+
+        h.left = deleteMin(h.left);
+        return balance(h);
+    }
+
+    public void deleteMax(){
+        // if both children of root are black, set root to red
+        if (!isRed(root.left) && !isRed(root.right))
+            root.color = RED;
+
+        root = deleteMax(root);
+        if (!isEmpty()) root.color = BLACK;
+    }
+
+    private Node deleteMax(Node h){
+        //保证方向的一致性,在底层将红色左节点转向右边删除
+        if (isRed(h.left)){
+            h = rotateRight(h);
+        }
+        if (h.right == null){
+            //到最右边，删除
+            return null;
+        }
+        if (!isRed(h.right)&&!isRed(h.right.left)){
+            //h.right为2节点
+            h = moveRedRight(h);
+        }
+        h.right = deleteMax(h.right);
+        return balance(h);
+    }
+
+    // restore red-black tree invariant
+    private Node balance(Node h) {
+        // assert (h != null);
+
+        if (isRed(h.right))                      h = rotateLeft(h);
+        if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
+        if (isRed(h.left) && isRed(h.right))     flipColors(h);
+
+        h.size = size(h.left) + size(h.right) + 1;
+        return h;
+    }
+
 }
