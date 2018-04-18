@@ -1,5 +1,7 @@
 package com.algs.test.c3;
 
+import java.util.NoSuchElementException;
+
 public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
     private static final boolean RED   = true;
     private static final boolean BLACK = false;
@@ -40,6 +42,22 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
 
     public boolean isEmpty() {
         return root == null;
+    }
+
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to get() is null");
+        return get(root, key);
+    }
+
+    // value associated with the given key in subtree rooted at x; null if no such key
+    private Value get(Node x, Key key) {
+        while (x != null) {
+            int cmp = key.compareTo(x.key);
+            if      (cmp < 0) x = x.left;
+            else if (cmp > 0) x = x.right;
+            else              return x.val;
+        }
+        return null;
     }
 
     public void put(Key key,Value val){
@@ -130,6 +148,7 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
     // Assuming that h is red and both h.right and h.right.left
     // are black, make h.right or one of its children red.
     private Node moveRedRight(Node h){
+        //变成一个大节点
         flipColors(h);
         if (isRed(h.left.left)) {
             h = rotateRight(h);
@@ -190,6 +209,44 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
         return balance(h);
     }
 
+    public void delete(Key key){
+        if(!isRed(root.left)&&!isRed(root.right)){
+            root.color = RED;
+        }
+        root = delete(root,key);
+        if (!isEmpty()){
+            root.color = BLACK;
+        }
+    }
+
+    private Node delete(Node h,Key key){
+        if (key.compareTo(h.key) < 0){
+            if (!isRed(h.left)&&!isRed(h.left.left)){
+                h = moveRedLeft(h);
+            }
+            h.left = delete(h.left,key);
+        }else {
+            if (isRed(h.left)){
+                h = rotateRight(h);
+            }
+            if (key.compareTo(h.key)==0&&(h.right == null)){
+                return null;
+            }
+            if (!isRed(h.right)&&!isRed(h.right.left)){
+                h = moveRedRight(h);
+            }
+            if (key.compareTo(h.key)==0){
+                Node x= min(h.right);
+                h.key = x.key;
+                h.val = x.val;
+                h.right = deleteMin(h.right);
+            }else {
+                h.right = delete(h.right,key);
+            }
+        }
+        return balance(h);
+    }
+
     // restore red-black tree invariant
     private Node balance(Node h) {
         // assert (h != null);
@@ -200,6 +257,30 @@ public class MyRedBlackBST<Key extends Comparable<Key>, Value> {
 
         h.size = size(h.left) + size(h.right) + 1;
         return h;
+    }
+
+    public Key min() {
+        if (isEmpty()) throw new NoSuchElementException("calls min() with empty symbol table");
+        return min(root).key;
+    }
+
+    // the smallest key in subtree rooted at x; null if no such key
+    private Node min(Node x) {
+        // assert x != null;
+        if (x.left == null) return x;
+        else                return min(x.left);
+    }
+
+    public Key max() {
+        if (isEmpty()) throw new NoSuchElementException("calls max() with empty symbol table");
+        return max(root).key;
+    }
+
+    // the largest key in the subtree rooted at x; null if no such key
+    private Node max(Node x) {
+        // assert x != null;
+        if (x.right == null) return x;
+        else                 return max(x.right);
     }
 
 }
